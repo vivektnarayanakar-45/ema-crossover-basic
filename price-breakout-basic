@@ -1,0 +1,9 @@
+def breakout_strategy(df):
+    df['high_20'] = df['high'].rolling(20).max()
+    df['low_20'] = df['low'].rolling(20).min()
+
+    df['signal'] = 0
+    df.loc[df['close'] > df['high_20'], 'signal'] = 1
+    df.loc[df['close'] < df['low_20'], 'signal'] = -1
+
+    return df
