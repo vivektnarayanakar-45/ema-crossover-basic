@@ -1,0 +1,17 @@
+import pandas as pd
+
+def rsi(df, period=14):
+    delta = df['close'].diff()
+    gain = (delta.where(delta > 0, 0)).rolling(period).mean()
+    loss = (-delta.where(delta < 0, 0)).rolling(period).mean()
+    rs = gain / loss
+    return 100 - (100 / (1 + rs))
+
+def rsi_strategy(df):
+    df['rsi'] = rsi(df)
+
+    df['signal'] = 0
+    df.loc[df['rsi'] < 30, 'signal'] = 1
+    df.loc[df['rsi'] > 70, 'signal'] = -1
+
+    return df
